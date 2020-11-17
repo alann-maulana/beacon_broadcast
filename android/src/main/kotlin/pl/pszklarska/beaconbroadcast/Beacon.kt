@@ -65,4 +65,7 @@ class Beacon {
     advertiseCallback?.invoke(false)
   }
 
+  fun getBeaconTransmitter(): BeaconTransmitter? {
+    return beaconTransmitter
+  }
 }

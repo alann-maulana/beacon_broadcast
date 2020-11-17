@@ -34,6 +34,10 @@ class BeaconBroadcastPlugin(private val beacon: Beacon) : MethodChannel.MethodCa
       "stop" -> stopBeacon(result)
       "isAdvertising" -> result.success(beacon.isAdvertising())
       "isTransmissionSupported" -> isTransmissionSupported(result)
+      "getAdvertisingMode" -> getAdvertisingMode(result)
+      "getAdvertisingTxPowerLevel" -> getAdvertisingMode(result)
+      "setAdvertisingMode" -> setAdvertisingMode(call, result)
+      "setAdvertisingTxPowerLevel" -> setAdvertisingTxPowerLevel(call, result)
       else -> result.notImplemented()
     }
   }
@@ -60,6 +64,32 @@ class BeaconBroadcastPlugin(private val beacon: Beacon) : MethodChannel.MethodCa
 
   private fun stopBeacon(result: MethodChannel.Result) {
     beacon.stop()
+    result.success(null)
+  }
+
+  private fun getAdvertisingMode(result: MethodChannel.Result) {
+    result.success(beacon.getBeaconTransmitter()?.advertiseMode ?: 0)
+  }
+
+  private fun getAdvertisingTxPowerLevel(result: MethodChannel.Result) {
+    result.success(beacon.getBeaconTransmitter()?.advertiseTxPowerLevel ?: 0)
+  }
+
+  private fun setAdvertisingMode(call: MethodCall, result: MethodChannel.Result) {
+    if (call.arguments !is Int) {
+      throw IllegalArgumentException("Arguments are not an integer! " + call.arguments)
+    }
+
+    beacon.getBeaconTransmitter()?.advertiseMode = call.arguments as Int
+    result.success(null)
+  }
+
+  private fun setAdvertisingTxPowerLevel(call: MethodCall, result: MethodChannel.Result) {
+    if (call.arguments !is Int) {
+      throw IllegalArgumentException("Arguments are not an integer! " + call.arguments)
+    }
+
+    beacon.getBeaconTransmitter()?.advertiseTxPowerLevel = call.arguments as Int
     result.success(null)
   }
 

@@ -200,6 +200,24 @@ class BeaconBroadcast {
         await _methodChannel.invokeMethod('isTransmissionSupported');
     return fromInt(isTransmissionSupported);
   }
+
+  Future<AdvertisingMode> getAdvertisingMode() async {
+    final index = await _methodChannel.invokeMethod('getAdvertisingMode');
+    return AdvertisingMode.values[index];
+  }
+
+  Future<AdvertisingTxPowerLevel> getAdvertisingTxPowerLevel() async {
+    final index = await _methodChannel.invokeMethod('getAdvertisingTxPowerLevel');
+    return AdvertisingTxPowerLevel.values[index];
+  }
+
+  Future<void> setAdvertisingMode(AdvertisingMode mode) async {
+    return await _methodChannel.invokeMethod('setAdvertisingMode', mode.index);
+  }
+
+  Future<int> setAdvertisingTxPowerLevel(AdvertisingTxPowerLevel mode) async {
+    return await _methodChannel.invokeMethod('setAdvertisingTxPowerLevel', mode.index);
+  }
 }
 
 class IllegalArgumentException implements Exception {
@@ -237,4 +255,12 @@ BeaconStatus fromInt(int value) {
     default:
       return BeaconStatus.NOT_SUPPORTED_CANNOT_GET_ADVERTISER;
   }
+}
+
+enum AdvertisingMode {
+  low, mid, high
+}
+
+enum AdvertisingTxPowerLevel {
+  ultraLow, low, mid, high
 }
